@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us Page</title>
+    <link rel="stylesheet" href="styles/contact.css">
+    <link rel="icon" type="image/png" href="images/logo.png" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-app.js";
+        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-database.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+      apiKey: "AIzaSyAfdbzkNb5JmSEw4_xaIES78LifwbiKGlc",
+      authDomain: "blog-9a391.firebaseapp.com",
+      databaseURL: "https://blog-9a391-default-rtdb.firebaseio.com",
+      projectId: "blog-9a391",
+      storageBucket: "blog-9a391.appspot.com",
+      messagingSenderId: "453752700142",
+      appId: "1:453752700142:web:b40259c671ecbc66aa87ff",
+      measurementId: "G-R83JQEVT9D"
+    };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const contactForm = document.getElementById("contactForm");
+
+            contactForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+
+                const firstName = document.getElementById("firstName").value;
+                const lastName = document.getElementById("lastName").value;
+                const email = document.getElementById("email").value;
+                const phone = document.getElementById("phone").value;
+                const message = document.getElementById("message").value;
+                
+                // Get the selected subject
+                let subject = "";
+                const subjectOptions = document.querySelectorAll('input[name="subject"]');
+                for (const option of subjectOptions) {
+                    if (option.checked) {
+                        subject = option.value;
+                        break;
+                    }
+                }
+
+                push(ref(database, "contacts"), {
+                    firstName,
+                    lastName,
+                    email,
+                    phone,
+                    subject,
+                    message
+                });
+
+                alert("Your message has been sent!");
+                contactForm.reset();
+            });
+        });
+        
+    </script>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="images/WhatsApp_Image_2024-12-10_at_7.19.12_PM-removebg-preview 1 (1).png" alt="Logo">
+        </div>
+        <input type="checkbox" id="menu-checkbox" class="menu-checkbox">
+        <label for="menu-checkbox" class="menu-icon">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </label>
+        <ul class="nav-links">
+          <li><a href="index.html">HOME</a></li>
+          <li><a href="aboutus.html">ABOUT US</a></li>
+          <li><a href="practice.html">PRACTICE</a></li>
+          <li><a href="attorneys.html">ATTORNEYS</a></li>
+          <li><a href="blog.html">BLOG</a></li>
+          <li><a href="contact.html">CONTACT</a></li>
+        </ul>       
+    </nav>
+    <div class="background">
+        <img src="images/contactbg.jpg" alt="Background">
+    </div>
+    <!-- <div class="overlay">
+        <h1>Contact Us</h1>
+        <b><p>Home > <span>Contact</span></p></b>
+    </div> -->
+  </header>
+
+    <section class="contact-section">
+        <h1>Contact Us</h1>
+        <p>Any question or remarks? Just write us a message!</p>
+
+        <div class="contact-container">
+            <div class="contact-info">
+                <b><h2>Contact Information</h2>
+                <p>Say something to start a live chat!</p>
+
+                <div class="contact-details">
+                    <div>
+                        <img src="images/bxs_phone-call.png" alt="phone">
+                        <span>+919599223122</span>
+                    </div>
+                    <div>
+                        <img src="images/Vector (2).png" alt="email">
+                        <span>office@akashkakade.org</span>
+                    </div>
+                    <div>
+                        <img src="images/Vector (4).png" alt="location">
+                        <pre><span>LGF-6,Amba Deep Building,14,<br>Kasturba Gandhi Marg,Connaught<br> PlaceNew Delhi - 110 001.</span></pre>
+                    </div>
+                    
+                
+                </div>
+
+                <div class="icon">
+                    <a href="#"><img src="images/twitter2.png" alt="twitter"></a>
+                    <a href="#"><img src="images/instagram.png" alt="instagram"></a>
+                    <a href="#"><img src="images/digg.png" alt="linkedin"></a>
+                </div>
+            </div>
+
+            <div class="contact-form">
+                <form id="contactForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">First Name</label>
+                            <input type="text" id="firstName" placeholder="First Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" id="lastName" placeholder="Last Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" id="email" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" id="phone" placeholder="+91 1197387924" required>
+                        </div>
+                    </div>
+
+                    <div class="subject-label">Select Subject?</div>
+                    <div class="subject-options">
+                        <div class="subject-option">
+                            <input type="radio" name="subject" id="general1" value="Constitutional Law">
+                            <label for="general1">Constitutional Law</label>
+                        </div>
+                        <div class="subject-option">
+                            <input type="radio" name="subject" id="general2" value="Corporate Law">
+                            <label for="general2">Corporate Law</label>
+                        </div>
+                        <div class="subject-option">
+                            <input type="radio" name="subject" id="general3" value="Land Acquisition">
+                            <label for="general3">Land Acquisition</label>
+                        </div>
+                        <div class="subject-option">
+                            <input type="radio" name="subject" id="general4" value="Criminal Law">
+                            <label for="general4">Criminal Law</label>
+                        </div>
+                    </div>
+                    <br>
+                    <br>
+
+                    <div class="form-group">
+                        <label class="form-label">Message</label>
+                        <textarea id="message" placeholder="Write your message here" required></textarea>
+                    </div>
+
+
+                    <button class="send-btn" type="submit">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <div class="footer">
+      <div class="footer-container">
+        <div class="footer-section">
+          <h3>NAVIGATION</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="aboutus.html">About us</a></li>
+            <li><a href="practice.html">Practice</a></li>
+            <li><a href="attorneys.html">Attorneys</a></li>
+            <li><a href="blog.html">Blog</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>WHAT WE DO</h3>
+          <ul>
+            <li><a href="#">Encouraging Testing</a></li>
+            <li><a href="#">Strengthening Advocacy</a></li>
+            <li><a href="#">Sharing Information</a></li>
+            <li><a href="#">Building Leadership</a></li>
+            <li><a href="#">Engaging With Global Fund</a></li>
+            <li><a href="#">Shining a Light</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>LEGAL</h3>
+          <ul>
+            <li><a href="aboutus.html">General Info</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="services.html">Terms of Service</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>TALK TO US</h3>
+          <ul>
+            <li>
+              <img src="images/akar-icons_location.png" alt="Location Icon" />
+              <div class="info">
+                <h4>Our Office</h4>
+                <p>
+                  LGF-6, Amba Deep Building,<br>
+                  14, Kasturba Gandhi Marg,<br>
+                  Connaught Place,<br>
+                  New Delhi - 110 001 <br>
+                   
+                </p>
+              </div>
+            </li>
+            <li>
+              <img src="images/ci_phone.png" alt="Phone Icon" />
+              <div class="info">
+                <h4>Let's Talk</h4>
+                <p><a href="tel:+911145261483">+911145261483</a></p>
+                <p><a href="tel:+919599223122">+919599223122</a></p>
+              </div>
+            </li>
+            <li>
+              <img src="images/Vector (8).png" alt="Email Icon" />
+              <div class="info">
+                <h4>General Enquiries</h4>
+                <p>
+                  <a href="mailto:office@akashkakade.org">office@akashkakade.org</a>
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-logo">
+          <img
+            src="images/WhatsApp Image 2024-12-10 at 7.19.12 PM 1 (1).png"
+            alt="ASAL Solutions Logo"
+          />
+        </div>
+        <p>
+          ©2024 Design and Developed with love by
+          <a href="https://tars.co.in/">TARS TECHNOLOGIES</a>
+        </p>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.linkedin.com/company/asal-legal-solution-llp/"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>   
+    </div>
+</body>
+</html>

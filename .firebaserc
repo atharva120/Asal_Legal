@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "getintouch-b36fe",
+    "realtimedatabase storage": "getintouch-b36fe",
+    "realtime database": "blog-9a391"
+  },
+  "targets": {},
+  "etags": {}
+}

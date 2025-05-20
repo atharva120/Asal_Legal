@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="/styles/Admin.css">
+    <link rel="icon" type="image/png" href="images/logo.png" />
+
+    <!-- Add Font Awesome and Google Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+      import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+      import { getDatabase, ref, set, push, get, onValue, remove } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+      
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyAfdbzkNb5JmSEw4_xaIES78LifwbiKGlc",
+        authDomain: "blog-9a391.firebaseapp.com",
+        databaseURL: "https://blog-9a391-default-rtdb.firebaseio.com",
+        projectId: "blog-9a391",
+        storageBucket: "blog-9a391.appspot.com",
+        messagingSenderId: "453752700142",
+        appId: "1:453752700142:web:b40259c671ecbc66aa87ff",
+        measurementId: "G-R83JQEVT9D"
+      };
+      
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const database = getDatabase(app);
+      
+      // Make Firebase variables available globally
+      window.firebaseApp = app;
+      window.firebaseAuth = auth;
+      window.firebaseDB = database;
+      window.firebaseFunctions = {
+        signIn: signInWithEmailAndPassword,
+        onAuthStateChanged: onAuthStateChanged,
+        signOut: signOut,
+        dbRef: ref,
+        dbSet: set,
+        dbPush: push,
+        dbGet: get,
+        dbOnValue: onValue,
+        dbRemove: remove
+      };
+      
+      // Signal that Firebase is ready
+      const event = new Event('firebaseReady');
+      window.dispatchEvent(event);
+    </script>
+  </head>
+
+  <body>
+    <!-- Login Page Content -->
+    <div id="loginPage" class="login-container" style="display: none;">
+      <div class="login-header">
+        <h1>Login</h1>
+      </div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required />
+        </div>
+        <button type="submit" class="login-button">Sign In</button>
+      </form>
+      <div id="errorMessage" class="error-message"></div>
+      <div id="successMessage" class="success-message"></div>
+      <div id="loginLoading" class="loading" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Logging in...</p>
+      </div>
+    </div>
+
+    <!-- Admin Dashboard Content -->
+    <div id="adminDashboard" style="display: none;">
+      <!-- Header -->
+      <header class="header">
+      
+        <div class="header-actions">
+          <button class="toggle-sidebar" id="toggleSidebar">
+            <i class="fas fa-bars"></i> 
+          </button>
+          <h1>Admin Dashboard</h1>
+          <!-- <button class="logout-btn" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button> -->
+        </div>
+      </header>
+
+      <!-- Main Layout -->
+      <div class="main-layout">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+          <div class="sidebar-menu">
+            <ul>
+              <li><a href="#" class="nav-link active" data-page="blog"><i class="fas fa-newspaper"></i> Blog Form</a></li>
+              <li><a href="#" class="nav-link" data-page="contactData"><i class="fas fa-envelope"></i> Contact Messages</a></li>
+              <li><a href="#" class="nav-link" data-page="touchData"><i class="fas fa-comment"></i> Get In Touch</a></li>
+              <li class="sidebar-divider"></li>
+              <li>
+                <a href="#" class="nav-link logout-link" id="logoutBtn">
+                  <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content" id="mainContent">
+          <!-- Blog Section (Form + List) -->
+          <div id="blogSection" class="page-section">
+            <div class="blog-form-container">
+              <h2>Create New Blog Post</h2>
+              <div id="blogFormStatus" class="form-status-message"></div>
+              <form id="blogForm" class="blog-form">
+                <label for="title">Blog Title:</label>
+                <input type="text" id="title" name="title" required>
+                
+                <label for="date">Blog Date:</label>
+                <input type="date" id="date" name="date" required>
+                
+                <label for="content">Blog Content:</label>
+                <textarea id="content" name="content" required></textarea>
+                
+                <label for="imageInput">Upload Image:</label>
+                <input type="file" id="imageInput" accept="image/*">
+                
+                <button type="submit" id="saveBlogBtn">Save Blog Post</button>
+              </form>
+            </div>
+
+            <div class="blog-list-container">
+              <h2>
+                Your Blog Posts
+                <button class="refresh-btn" id="refreshBlogsBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
+              </h2>
+              <div id="blogGrid" class="blog-grid">
+                <div class="loading">
+                  <div class="loading-spinner"></div>
+                  <p>Loading blog posts...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Data Section -->
+          <div id="contactDataSection" class="page-section" style="display: none;">
+            <div class="data-container">
+              <h2>Contact Form Submissions</h2>
+              <div id="contactsList">
+                <div class="loading">
+                  <div class="loading-spinner"></div>
+                  <p>Loading contact data...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Get In Touch Data Section -->
+          <div id="touchDataSection" class="page-section" style="display: none;">
+            <div class="data-container">
+              <h2>Get In Touch Submissions</h2>
+              <div id="touchList">
+                <div class="loading">
+                  <div class="loading-spinner"></div>
+                  <p>Loading messages...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Blog View Modal -->
+    <div id="blogViewModal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="viewBlogTitle">Blog Title</h2>
+          <button class="modal-close" id="closeBlogViewModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <img id="viewBlogImage" src="" alt="Blog Image">
+          <p class="blog-date-modal" id="viewBlogDate">January 1, 2023</p>
+          <div class="blog-content-modal" id="viewBlogContent"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Blog Modal -->
+    <div id="editBlogModal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Edit Blog Post</h2>
+          <button class="modal-close" id="closeEditModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="editFormStatus" class="form-status-message"></div>
+          <form id="editBlogForm">
+            <input type="hidden" id="editBlogId">
+            <label for="editTitle">Blog Title:</label>
+            <input type="text" id="editTitle" name="editTitle" required>
+            
+            <label for="editDate">Blog Date:</label>
+            <input type="date" id="editDate" name="editDate" required>
+            
+            <label for="editContent">Blog Content:</label>
+            <textarea id="editContent" name="editContent" required></textarea>
+            
+            <label for="editImageInput">Change Image (optional):</label>
+            <input type="file" id="editImageInput" accept="image/*">
+            
+            <div id="currentImageContainer">
+              <p>Current Image:</p>
+              <img id="currentImage" src="" alt="Current blog image" style="max-width: 100%; max-height: 200px; margin-top: 10px;">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="cancel-btn" id="cancelEditBtn">Cancel</button>
+          <button class="save-btn" id="saveEditBtn">Save Changes</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div id="confirmDeleteModal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Confirm Delete</h2>
+          <button class="modal-close" id="closeDeleteModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this blog post?</p>
+          <p>This action cannot be undone.</p>
+          <input type="hidden" id="deletePostId">
+        </div>
+        <div class="modal-footer">
+          <button class="cancel-btn" id="cancelDeleteBtn">Cancel</button>
+          <button class="delete-confirm-btn" id="confirmDeleteBtn">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main App Script -->
+    <script>
+// Wait for Firebase to be fully initialized before running the app
+window.addEventListener('firebaseReady', function() {
+  // Shortcuts to Firebase functions
+  const auth = window.firebaseAuth;
+  const database = window.firebaseDB;
+  const { 
+    signIn, 
+    onAuthStateChanged, 
+    signOut, 
+    dbRef, 
+    dbSet, 
+    dbPush, 
+    dbGet, 
+    dbOnValue,
+    dbRemove 
+  } = window.firebaseFunctions;
+  
+  // Set initial auth state
+  let isAuthenticated = false;
+  let authChecked = false; // Flag to track if authentication has been verified
+
+  // Function to show a specific page
+  function showPage(pageId) {
+    document.getElementById("loginPage").style.display = pageId === "loginPage" ? "block" : "none";
+    document.getElementById("adminDashboard").style.display = pageId === "adminDashboard" ? "block" : "none";
+  }
+
+  // Function to navigate between sections
+  function navigateTo(section) {
+    // First ensure user is authenticated
+    if (!isAuthenticated) {
+      console.warn("Attempted to navigate without authentication");
+      showPage("loginPage");
+      return;
+    }
+    
+    // Check if all required elements exist
+    const sectionElement = document.getElementById(section + 'Section');
+    if (!sectionElement) {
+      console.error(`Section element ${section}Section not found`);
+      return;
+    }
+    
+    // Hide all page sections
+    document.querySelectorAll('.page-section').forEach(el => {
+      el.style.display = 'none';
+    });
+    
+    // Remove active class from all nav links
+    document.querySelectorAll('.nav-link').forEach(el => {
+      el.classList.remove('active');
+    });
+    
+    // Show the selected section
+    sectionElement.style.display = 'block';
+    
+    // Find and activate the nav link
+    const navLink = document.querySelector(`[data-page="${section}"]`);
+    if (navLink) {
+      navLink.classList.add('active');
+    }
+    
+    // Load data if needed
+    if (section === 'blog') {
+      loadBlogs();
+    } else if (section === 'contactData') {
+      loadContactData();
+    } else if (section === 'touchData') {
+      loadTouchData();
+    }
+  }
+
+  // Initially show login page - THIS IS THE KEY CHANGE
+  showPage("loginPage");
+  
+  // Handle form submission
+  document.getElementById("loginForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    // Get email and password values
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    // Clear previous messages
+    document.getElementById("errorMessage").style.display = "none";
+    document.getElementById("successMessage").style.display = "none";
+    document.getElementById("loginLoading").style.display = "flex";
+
+    // Validate credentials before attempting to sign in
+    if (!email || !password) {
+      document.getElementById("errorMessage").textContent = "Email and password are required!";
+      document.getElementById("errorMessage").style.display = "block";
+      document.getElementById("loginLoading").style.display = "none";
+      return;
+    }
+
+    // Attempt to sign in with email and password
+    signIn(auth, email, password)
+      .then((userCredential) => {
+        // Login successful - but we won't redirect yet
+        // The onAuthStateChanged handler will verify permissions and redirect if appropriate
+        document.getElementById("successMessage").textContent = "Login successful! Verifying access...";
+        document.getElementById("successMessage").style.display = "block";
+      })
+      .catch((error) => {
+        // Error: Display error message
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        document.getElementById("loginLoading").style.display = "none";
+
+        if (errorCode === "auth/wrong-password") {
+          document.getElementById("errorMessage").textContent = "Incorrect password!";
+        } else if (errorCode === "auth/user-not-found") {
+          document.getElementById("errorMessage").textContent = "No user found with this email!";
+        } else {
+          document.getElementById("errorMessage").textContent = errorMessage;
+        }
+
+        document.getElementById("errorMessage").style.display = "block";
+      });
+  });
+
+  // Continuously monitor auth state
+  onAuthStateChanged(auth, (user) => {
+    authChecked = true; // Mark that we've checked auth state
+    
+    if (user) {
+      // User is signed in - verify user exists in your allowed users database
+      document.getElementById("loginLoading").style.display = "flex";
+      
+      verifyUserAccess(user.uid).then(hasAccess => {
+        document.getElementById("loginLoading").style.display = "none";
+        
+        if (hasAccess) {
+          isAuthenticated = true;
+          document.getElementById("successMessage").textContent = "Access verified!";
+          document.getElementById("successMessage").style.display = "block";
+          
+          // Brief delay to show success message before redirecting
+          setTimeout(() => {
+            showPage("adminDashboard");
+            navigateTo("blog");
+          }, 1000);
+        } else {
+          // User exists but doesn't have proper access rights
+          isAuthenticated = false;
+          document.getElementById("errorMessage").textContent = "You don't have permission to access this dashboard.";
+          document.getElementById("errorMessage").style.display = "block";
+          signOut(auth); // Sign them out automatically
+          showPage("loginPage");
+        }
+      });
+    } else {
+      // No user is signed in
+      isAuthenticated = false;
+      document.getElementById("loginLoading").style.display = "none";
+      showPage("loginPage");
+    }
+  });
+
+  // Function to verify if user has proper access rights
+  // This assumes you have a 'users' collection with role information
+  function verifyUserAccess(uid) {
+    return new Promise((resolve) => {
+      // Check if user exists in your 'allowedUsers' or 'users' collection
+      const userRef = dbRef(database, `users/${uid}`);
+      dbGet(userRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const userData = snapshot.val();
+          // Check if user has admin role or required permissions
+          resolve(userData.role === 'admin' || userData.hasAccess === true);
+        } else {
+          // If the user doesn't exist in the database yet, create an entry with admin access
+          console.log("User not found in database, creating user profile with admin access");
+          
+          // Create a new user record with admin role
+          const newUserData = {
+            role: 'admin',
+            hasAccess: true,
+            email: auth.currentUser.email,
+            createdAt: new Date().toISOString()
+          };
+          
+          // Set the user data in Firebase
+          dbSet(dbRef(database, `users/${uid}`), newUserData)
+            .then(() => {
+              console.log("Created new user with admin access");
+              resolve(true);
+            })
+            .catch((error) => {
+              console.error("Error creating user record:", error);
+              // If we can't create a record, we'll just allow access anyway
+              // since authentication succeeded
+              resolve(true);
+            });
+        }
+      }).catch((error) => {
+        console.error("Error checking user access:", error);
+        // If there's an error checking permissions, grant access (since authentication succeeded)
+        // You may want to change this to false in a production environment
+        resolve(true);
+      });
+    });
+  }
+
+  // Function to check authentication before any action
+  function checkAuthentication() {
+    if (!isAuthenticated) {
+      showPage("loginPage");
+      return false;
+    }
+    return true;
+  }
+
+  // Handle blog form submission
+  document.getElementById("blogForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    
+    // Verify user is authenticated before saving blog
+    if (!checkAuthentication()) {
+      alert("You must be logged in to save a blog post.");
+      return;
+    }
+    
+    const title = document.getElementById("title").value.trim();
+    const date = document.getElementById("date").value;
+    const content = document.getElementById("content").value.trim();
+    const imageFile = document.getElementById("imageInput").files[0];
+    
+    if (title && content && date) {
+      const blogId = dbPush(dbRef(database, 'blogs')).key;
+      let imageUrl = "";
+
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append('file', imageFile);
+        formData.append('upload_preset', 'blogpage');
+        
+        try {
+          const response = await fetch('https://api.cloudinary.com/v1_1/ds3maazrw/image/upload', {
+            method: 'POST',
+            body: formData
+          });
+          const data = await response.json();
+          imageUrl = data.secure_url || "";
+        } catch (error) {
+          console.error("Error uploading image: ", error);
+          alert("Error uploading image: " + error.message);
+          return;
+        }
+      }
+
+      dbSet(dbRef(database, 'blogs/' + blogId), {
+        title,
+        date,
+        content,
+        imageUrl,
+        timestamp: new Date().toISOString(),
+        userId: auth.currentUser.uid
+      }).then(() => {
+        alert("Blog post saved successfully!");
+        document.getElementById("blogForm").reset();
+        loadBlogs();
+      }).catch((error) => {
+        console.error("Error saving blog: ", error);
+        alert("Error saving blog: " + error.message);
+      });
+    } else {
+      alert("All fields are required!");
+    }
+  });
+
+  // Function to load blogs and display in grid
+  function loadBlogs() {
+    if (!checkAuthentication()) {
+      return;
+    }
+    
+    const blogsRef = dbRef(database, 'blogs');
+    dbOnValue(blogsRef, (snapshot) => {
+      const blogGrid = document.getElementById('blogGrid');
+      blogGrid.innerHTML = '';
+      
+      if (snapshot.exists()) {
+        const blogs = snapshot.val();
+        const blogIds = Object.keys(blogs);
+        const currentUserId = auth.currentUser.uid;
+        
+        // Filter blogs by the current user
+        const userBlogs = blogIds.filter(id => {
+          return blogs[id].userId === currentUserId || !blogs[id].userId;
+        });
+        
+        userBlogs.sort((a, b) => {
+          return new Date(blogs[b].timestamp) - new Date(blogs[a].timestamp);
+        });
+        
+        if (userBlogs.length === 0) {
+          blogGrid.innerHTML = '<div class="no-data">No blogs found. Create your first blog post!</div>';
+          return;
+        }
+        
+        userBlogs.forEach(id => {
+          const blog = blogs[id];
+          const blogCard = document.createElement('div');
+          blogCard.className = 'blog-card';
+          blogCard.dataset.blogId = id;
+          
+          // Create a content preview (first 150 characters)
+          const contentPreview = blog.content.length > 150 
+            ? blog.content.substring(0, 150) + '...' 
+            : blog.content;
+          
+          blogCard.innerHTML = `
+            <img src="${blog.imageUrl || 'https://via.placeholder.com/300x180?text=No+Image'}" alt="${blog.title}">
+            <div class="blog-card-content">
+              <h3>${blog.title}</h3>
+              <p class="blog-date">${new Date(blog.date).toLocaleDateString()}</p>
+              <div class="blog-content-preview">${contentPreview}</div>
+              <div class="blog-card-actions">
+                <button class="edit-btn" data-action="edit" data-id="${id}"><i class="fas fa-edit"></i> Edit</button>
+                <button class="delete-btn" data-action="delete" data-id="${id}"><i class="fas fa-trash"></i> Delete</button>
+              </div>
+            </div>
+          `;
+          
+          blogGrid.appendChild(blogCard);
+          
+          // Add event listeners to buttons inside this blog card
+          const editBtn = blogCard.querySelector('.edit-btn');
+          const deleteBtn = blogCard.querySelector('.delete-btn');
+          
+          editBtn.addEventListener('click', () => openEditModal(id));
+          deleteBtn.addEventListener('click', () => openDeleteModal(id));
+        });
+      } else {
+        blogGrid.innerHTML = '<div class="no-data">No blogs found. Create your first blog post!</div>';
+      }
+    }, (error) => {
+      console.error("Error loading blogs: ", error);
+      blogGrid.innerHTML = '<div class="no-data">Error loading blogs. Please try again later.</div>';
+    });
+  }
+
+  // Function to load contact data from Firebase
+  function loadContactData() {
+    if (!checkAuthentication()) {
+      return;
+    }
+
+    const contactsList = document.getElementById('contactsList');
+    if (!contactsList) {
+      console.error("contactsList element not found");
+      return;
+    }
+
+    const contactsRef = dbRef(database, 'contacts');
+    dbOnValue(contactsRef, (snapshot) => {
+      
+      if (snapshot.exists()) {
+        const contacts = snapshot.val();
+        const contactIds = Object.keys(contacts);
+        
+        // Sort by timestamp (newest first)
+        contactIds.sort((a, b) => {
+          return new Date(contacts[b].timestamp) - new Date(contacts[a].timestamp);
+        });
+        
+        if (contactIds.length === 0) {
+          contactsList.innerHTML = '<div class="no-data">No contact form submissions found.</div>';
+          return;
+        }
+        
+        // Process all contacts
+        const allContactsHtml = [];
+        
+        contactIds.forEach(id => {
+          const contact = contacts[id];
+          const contactHtml = `
+            <div class="data-item">
+              <h3>${contact.firstName} ${contact.lastName}</h3>
+              <div class="data-field"><span>Email:</span> ${contact.email}</div>
+              <div class="data-field"><span>Phone:</span> ${contact.phone}</div>
+              <div class="data-field"><span>Subject:</span> ${contact.subject || 'Not specified'}</div>
+              <div class="data-field"><span>Message:</span> ${contact.message}</div>
+            </div>
+          `;
+          
+          allContactsHtml.push(contactHtml);
+        });
+        
+        // Update contacts list
+        if (allContactsHtml.length > 0) {
+          contactsList.innerHTML = allContactsHtml.join('');
+        } else {
+          contactsList.innerHTML = '<div class="no-data">No contact form submissions found.</div>';
+        }
+      } else {
+        contactsList.innerHTML = '<div class="no-data">No contact form submissions found.</div>';
+      }
+    }, (error) => {
+      console.error("Error loading contact data: ", error);
+      contactsList.innerHTML = '<div class="no-data">Error loading contact data. Please try again later.</div>';
+    });
+  }
+
+  // Function to load "Get in Touch" data from Firebase
+  function loadTouchData() {
+    if (!checkAuthentication()) {
+      return;
+    }
+    
+    const touchList = document.getElementById('touchList');
+    if (!touchList) {
+      console.error("touchList element not found");
+      return;
+    }
+    
+    const touchRef = dbRef(database, 'getintouch');
+    dbOnValue(touchRef, (snapshot) => {
+      
+      if (snapshot.exists()) {
+        const messages = snapshot.val();
+        const messageIds = Object.keys(messages);
+        
+        // Sort by timestamp (newest first)
+        messageIds.sort((a, b) => {
+          return new Date(messages[b].timestamp) - new Date(messages[a].timestamp);
+        });
+        
+        if (messageIds.length === 0) {
+          touchList.innerHTML = '<div class="no-data">No "Get in Touch" data found.</div>';
+          return;
+        }
+        
+        const messagesHtml = [];
+        
+        messageIds.forEach(id => {
+          const message = messages[id];
+          const messageHtml = `
+            <div class="data-item">
+              <h3>${message.fullName}</h3>
+              <div class="data-field"><span>Email:</span> ${message.email}</div>
+              <div class="data-field"><span>Message:</span> ${message.message}</div>
+            </div>
+          `;
+          
+          messagesHtml.push(messageHtml);
+        });
+        
+        touchList.innerHTML = messagesHtml.join('');
+      } else {
+        touchList.innerHTML = '<div class="no-data">No "Get in Touch" data found.</div>';
+      }
+    }, (error) => {
+      console.error("Error loading get in touch data: ", error);
+      touchList.innerHTML = '<div class="no-data">Error loading data. Please try again later.</div>';
+    });
+  }
+
+  // View blog post
+  function viewBlog(blogId) {
+    if (!checkAuthentication()) {
+      return;
+    }
+    
+    const blogRef = dbRef(database, 'blogs/' + blogId);
+    dbGet(blogRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const blog = snapshot.val();
+        
+        // Populate modal with blog data
+        document.getElementById('viewBlogTitle').textContent = blog.title;
+        document.getElementById('viewBlogDate').textContent = new Date(blog.date).toLocaleDateString();
+        document.getElementById('viewBlogContent').innerHTML = blog.content;
+        
+        // Set image or placeholder
+        const viewBlogImage = document.getElementById('viewBlogImage');
+        if (blog.imageUrl) {
+          viewBlogImage.src = blog.imageUrl;
+          viewBlogImage.style.display = 'block';
+        } else {
+          viewBlogImage.style.display = 'none';
+        }
+        
+        // Show modal
+        document.getElementById('blogViewModal').style.display = 'flex';
+      } else {
+        alert('Blog post not found!');
+      }
+    }).catch((error) => {
+      console.error("Error loading blog details: ", error);
+      alert("Error loading blog details: " + error.message);
+    });
+  }
+  
+  // Close blog view modal
+  document.getElementById('closeBlogViewModal').addEventListener('click', () => {
+    document.getElementById('blogViewModal').style.display = 'none';
+  });
+  
+  // Open edit modal
+  function openEditModal(blogId) {
+    if (!checkAuthentication()) {
+      return;
+    }
+    
+    const blogRef = dbRef(database, 'blogs/' + blogId);
+    dbGet(blogRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const blog = snapshot.val();
+        
+        // Check if user has permission to edit this blog
+        if (blog.userId && blog.userId !== auth.currentUser.uid) {
+          alert("You don't have permission to edit this blog post.");
+          return;
+        }
+        
+        // Populate form with blog data
+        document.getElementById('editBlogId').value = blogId;
+        document.getElementById('editTitle').value = blog.title;
+        document.getElementById('editDate').value = blog.date;
+        document.getElementById('editContent').value = blog.content;
+        
+        // Set current image
+        const currentImage = document.getElementById('currentImage');
+        if (blog.imageUrl) {
+          currentImage.src = blog.imageUrl;
+          document.getElementById('currentImageContainer').style.display = 'block';
+        } else {
+          document.getElementById('currentImageContainer').style.display = 'none';
+        }
+        
+        // Show modal
+        document.getElementById('editBlogModal').style.display = 'flex';
+      } else {
+        alert('Blog post not found!');
+      }
+    }).catch((error) => {
+      console.error("Error loading blog for edit: ", error);
+      alert("Error loading blog for edit: " + error.message);
+    });
+  }
+  
+  // Close edit modal
+  document.getElementById('closeEditModal').addEventListener('click', () => {
+    document.getElementById('editBlogModal').style.display = 'none';
+  });
+  
+  document.getElementById('cancelEditBtn').addEventListener('click', () => {
+    document.getElementById('editBlogModal').style.display = 'none';
+  });
+  
+  // Save edited blog
+  document.getElementById('saveEditBtn').addEventListener('click', async () => {
+    if (!checkAuthentication()) {
+      return;
+    }
+    
+    const blogId = document.getElementById('editBlogId').value;
+    const title = document.getElementById('editTitle').value.trim();
+    const date = document.getElementById('editDate').value;
+    const content = document.getElementById('editContent').value.trim();
+    const imageFile = document.getElementById('editImageInput').files[0];
+    
+    if (!title || !content || !date) {
+      alert('All fields are required!');
+      return;
+    }
+    
+    // Get current blog data to maintain fields we're not updating
+    const blogRef = dbRef(database, 'blogs/' + blogId);
+    const snapshot = await dbGet(blogRef);
+    
+    if (!snapshot.exists()) {
+      alert('Blog post not found!');
+      return;
+    }
+    
+    const currentBlog = snapshot.val();
+    
+    // Check if user has permission to edit this blog
+    if (currentBlog.userId && currentBlog.userId !== auth.currentUser.uid) {
+      alert("You don't have permission to edit this blog post.");
+      return;
+    }
+    
+    let imageUrl = currentBlog.imageUrl;
+    
+    // Upload new image if provided
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append('file', imageFile);
+      formData.append('upload_preset', 'blogpage');
+      
+      try {
+        const response = await fetch('https://api.cloudinary.com/v1_1/ds3maazrw/image/upload', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await response.json();
+        imageUrl = data.secure_url || imageUrl;
+      } catch (error) {
+        console.error("Error uploading image: ", error);
+        alert("Error uploading image: " + error.message);
+        return;
+      }
+    }
+    
+    // Update blog in database
+    dbSet(blogRef, {
+      ...currentBlog,
+      title,
+      date,
+      content,
+      imageUrl,
+      updatedAt: new Date().toISOString()
+    }).then(() => {
+      alert("Blog post updated successfully!");
+      document.getElementById('editBlogModal').style.display = 'none';
+      loadBlogs();
+    }).catch((error) => {
+      console.error("Error updating blog: ", error);
+      alert("Error updating blog: " + error.message);
+    });
+  });
+  
+  // Open delete confirmation modal
+  function openDeleteModal(blogId) {
+    if (!checkAuthentication()) {
+      return;
+    }
+    
+    // First check if user has permission to delete this blog
+    const blogRef = dbRef(database, 'blogs/' + blogId);
+    dbGet(blogRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const blog = snapshot.val();
+        
+        if (blog.userId && blog.userId !== auth.currentUser.uid) {
+          alert("You don't have permission to delete this blog post.");
+          return;
+        }
+        
+        document.getElementById('deletePostId').value = blogId;
+        document.getElementById('confirmDeleteModal').style.display = 'flex';
+      } else {
+        alert('Blog post not found!');
+      }
+    }).catch((error) => {
+      console.error("Error checking blog permissions: ", error);
+      alert("Error checking permissions: " + error.message);
+    });
+  }
+  
+  // Close delete modal
+  document.getElementById('closeDeleteModal').addEventListener('click', () => {
+    document.getElementById('confirmDeleteModal').style.display = 'none';
+  });
+  
+  document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
+    document.getElementById('confirmDeleteModal').style.display = 'none';
+  });
+  
+  // Delete blog post
+  document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+    if (!checkAuthentication()) {
+      return;
+    }
+    
+    const blogId = document.getElementById('deletePostId').value;
+    
+    // Delete blog from database
+    dbRemove(dbRef(database, 'blogs/' + blogId))
+      .then(() => {
+        alert('Blog post deleted successfully!');
+        document.getElementById('confirmDeleteModal').style.display = 'none';
+        loadBlogs();
+      })
+      .catch((error) => {
+        console.error("Error deleting blog: ", error);
+        alert("Error deleting blog: " + error.message);
+      });
+  });
+  
+  // Refresh blogs
+  document.getElementById('refreshBlogsBtn').addEventListener('click', () => {
+    loadBlogs();
+  });
+
+  // Session timeout management
+  let sessionTimeout;
+  const SESSION_TIMEOUT_DURATION = 30 * 60 * 1000; // 30 minutes
+  
+  function resetSessionTimeout() {
+    clearTimeout(sessionTimeout);
+    sessionTimeout = setTimeout(() => {
+      if (isAuthenticated) {
+        alert("Your session has timed out due to inactivity. Please log in again.");
+        signOut(auth);
+      }
+    }, SESSION_TIMEOUT_DURATION);
+  }
+  
+  // Reset timeout on user activity
+  ["click", "keypress", "scroll", "mousemove"].forEach(eventType => {
+    document.addEventListener(eventType, resetSessionTimeout);
+  });
+  
+  // Initial session timeout
+  resetSessionTimeout();
+
+  // Logout functionality
+  document.getElementById("logoutBtn").addEventListener("click", (e) => {
+    e.preventDefault();
+    clearTimeout(sessionTimeout); // Clear timeout on manual logout
+    signOut(auth).then(() => {
+      isAuthenticated = false;
+      showPage("loginPage");
+      document.getElementById("successMessage").style.display = "none";
+      document.getElementById("errorMessage").style.display = "none";
+    }).catch((error) => {
+      console.error("Logout failed: ", error);
+      alert("Logout failed: " + error.message);
+    });
+  });
+  
+  // Handle sidebar navigation
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const page = e.target.closest('.nav-link').dataset.page;
+      navigateTo(page);
+      
+      // Reset session timeout on navigation
+      resetSessionTimeout();
+      
+      // Close sidebar on mobile after navigation
+      if (window.innerWidth <= 768) {
+        document.getElementById('sidebar').classList.remove('active');
+      }
+    });
+  });
+  
+  // Toggle sidebar on mobile
+  document.getElementById('toggleSidebar').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('active');
+  });
+  
+  // Check screen size to show/hide toggle button
+  function checkScreenSize() {
+    if (window.innerWidth <= 768) {
+      document.getElementById('toggleSidebar').style.display = 'block';
+    } else {
+      document.getElementById('toggleSidebar').style.display = 'none';
+      document.getElementById('sidebar').classList.add('active');
+    }
+  }
+  
+  // Call on load and resize
+  window.addEventListener('resize', checkScreenSize);
+  checkScreenSize();
+});
+      </script>
+  </body>
+</html>

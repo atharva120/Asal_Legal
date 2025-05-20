@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> Blog Page</title>
+    <link rel="stylesheet" href="styles/blog.css" />
+    <link rel="icon" type="image/png" href="images/logo.png" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"/>
+      
+      
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-database.js";
+    
+        const firebaseConfig = {
+            apiKey: "AIzaSyAfdbzkNb5JmSEw4_xaIES78LifwbiKGlc",
+            authDomain: "blog-9a391.firebaseapp.com",
+            databaseURL: "https://blog-9a391-default-rtdb.firebaseio.com",
+            projectId: "blog-9a391",
+            storageBucket: "blog-9a391.firebasestorage.app",
+            messagingSenderId: "453752700142",
+            appId: "1:453752700142:web:b40259c671ecbc66aa87ff",
+            measurementId: "G-R83JQEVT9D"
+        };
+    
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+    
+        async function fetchBlogs() {
+            try {
+                const dbRef = ref(db, 'blogs');
+                const snapshot = await get(dbRef);
+    
+                let blogsContainer = document.getElementById("blogsDisplay");
+    
+                if (!blogsContainer) {
+                    console.error("Element with ID 'blogsDisplay' not found!");
+                    return;
+                }
+    
+                blogsContainer.innerHTML = "";
+    
+                if (!snapshot.exists()) {
+                    blogsContainer.innerHTML = "<p>No blogs found.</p>";
+                    return;
+                }
+    
+                const blogsData = snapshot.val();
+                const validBlogs = [];
+    
+                for (let blogId in blogsData) {
+                    let data = blogsData[blogId];
+                    if (data.title && data.content) {
+                        validBlogs.push({ id: blogId, ...data });
+                    }
+                }
+    
+                if (validBlogs.length > 6) {
+                    validBlogs.splice(0, validBlogs.length - 6);
+                }
+    
+                validBlogs.forEach(data => {
+                    let imageUrl = data.imageUrl ? data.imageUrl : "images/default-image.png";
+                    let blogPost = `
+                        <div class="blog-item" onclick="viewBlog('${data.id}')">
+                            <img src="${imageUrl}" alt="Blog Image" class="blog-image"/>
+                            <div class="blog-content">
+                                <p class="blog-date">Date - ${data.date || "Unknown Date"}</p>
+                                <h3 class="blog-title">${data.title || "Untitled Blog"}</h3>
+                                <p class="blog-description">${data.content ? data.content.substring(0, 150) + "..." : "No content available."}</p>
+                            </div>
+                        </div>
+                    `;
+                    blogsContainer.innerHTML += blogPost;
+                });
+    
+            } catch (error) {
+                console.error("Error fetching blogs:", error);
+            }
+        }
+    
+        window.viewBlog = function (id) {
+            window.location.href = `blogview.html?id=${id}`;
+        };
+    
+        document.addEventListener("DOMContentLoaded", fetchBlogs);
+    </script>
+    
+
+  </head>
+  <body>
+    <!-- Header Section -->
+    <header>
+      <nav class="navbar">
+          <div class="logo">
+              <img src="images/WhatsApp_Image_2024-12-10_at_7.19.12_PM-removebg-preview 1 (1).png" alt="Logo">
+          </div>
+          <input type="checkbox" id="menu-checkbox" class="menu-checkbox">
+          <label for="menu-checkbox" class="menu-icon">
+              <span class="bar"></span>
+              <span class="bar"></span>
+              <span class="bar"></span>
+          </label>
+          <ul class="nav-links">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="aboutus.html">ABOUT US</a></li>
+            <li><a href="practice.html">PRACTICE</a></li>
+            <li><a href="attorneys.html">ATTORNEYS</a></li>
+            <li><a href="blog.html">BLOG</a></li>
+            <li><a href="contact.html">CONTACT</a></li>
+          </ul> 
+      </nav>
+      <div class="background">
+        <img src="images/blogfinal.jpg" alt="image" class="bg-image" />
+        <div class="overlay">
+          <h1>Blogs</h1>
+          <p>
+            <a href="index.html">Home</a> > <span>Blogs</span>
+        </p>
+        </div>
+      </div>
+    </header>
+
+
+   
+    <section class="blog-section" id="blogGrid">
+      <h1 class="section-title">Latest Blog</h1>
+      <p class="section-subtitle">
+        Worem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate
+        <br />libero et velit interdum, ac aliquet odio mattis.
+      </p>
+      <div class="container">
+        <div class="blogs-container">
+          <h2 class="latest-blogs-title">Latest Blogs</h2>
+          <div class="blog-grid" id="blogsDisplay">
+            <!-- Blogs will be dynamically inserted here -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!--footer section-->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-section">
+          <h3>NAVIGATION</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="aboutus.html">About us</a></li>
+            <li><a href="practice.html">Practice</a></li>
+            <li><a href="attorneys.html">Attorneys</a></li>
+            <li><a href="blog.html">Blog</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>WHAT WE DO</h3>
+          <ul>
+            <li><a href="#">Encouraging Testing</a></li>
+            <li><a href="#">Strengthening Advocacy</a></li>
+            <li><a href="#">Sharing Information</a></li>
+            <li><a href="#">Building Leadership</a></li>
+            <li><a href="#">Engaging With Global Fund</a></li>
+            <li><a href="#">Shining a Light</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>LEGAL</h3>
+          <ul>
+            <li><a href="aboutus.html">General Info</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="services.html">Terms of Service</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>TALK TO US</h3>
+          <ul>
+            <li>
+              <img
+                src="images/akar-icons_location (1).png"
+                alt="Location Icon"
+              />
+              <div class="info">
+                <h4>Our Office</h4>
+                <p>LGF-6, Amba Deep Building,<br>
+                  14, Kasturba Gandhi Marg,<br>
+                  Connaught Place,<br>
+                  New Delhi - 110 001.<br>
+                  
+                </p>
+              </div>
+            </li>
+            <li>
+              <img src="images/ci_phone (1).png" alt="Phone Icon" />
+              <div class="info">
+                <h4>Let’s Talk</h4>
+                <p><a href="tel:+911145261483">+911145261483</a></p>
+                <p><a href="tel:+919599223122">+919599223122</a></p>
+              </div>
+            </li>
+            <li>
+              <img src="images/Vector (15).png" alt="Email Icon" />
+              <div class="info">
+                <h4>General Enquiries</h4>
+                <a href="office@akashkakade.org"
+                    >office@akashkakade.org</a
+                  >
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-logo">
+          <img
+            src="images/WhatsApp Image 2024-12-10 at 7.19.12 PM 1 (2).png"
+            alt="ASAL Solutions Logo"
+          />
+        </div>
+        <p>
+          ©2024 Design and Developed with love by
+          <a href="https://tars.co.in/">TARS TECHNOLOGIES</a>
+        </p>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.linkedin.com/company/asal-legal-solution-llp/"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

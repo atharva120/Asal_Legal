@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asal legal</title>
+    <link rel="icon" type="image/png" href="images/logo.png" />
+    <link rel="stylesheet" href="styles/home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" >
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-app.js";
+      import { getDatabase, ref, push, onValue, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-database.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-analytics.js";
+
+// Firebase Configuration (Shared for Blogs & Get in Touch)
+const firebaseConfig = {
+  apiKey: "AIzaSyAfdbzkNb5JmSEw4_xaIES78LifwbiKGlc",
+  authDomain: "blog-9a391.firebaseapp.com",
+  databaseURL: "https://blog-9a391-default-rtdb.firebaseio.com",
+  projectId: "blog-9a391",
+  storageBucket: "blog-9a391.appspot.com",
+  messagingSenderId: "453752700142",
+  appId: "1:453752700142:web:b40259c671ecbc66aa87ff",
+  measurementId: "G-R83JQEVT9D"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const database = getDatabase(app);
+
+// Function to Handle "Get in Touch" Form Submission
+function setupContactForm() {
+  const getForm = document.getElementById("getForm");
+  if (!getForm) return;
+
+  getForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const fullName = document.getElementById("fullName").value;
+    const email = document.getElementById("email").value;
+    const message = document.getElementById("message").value;
+
+    // Push data to Firebase Realtime Database
+    push(ref(database, "getintouch"), {
+      fullName,
+      email,
+      message
+    })
+      .then(() => {
+        alert("Your message has been sent!");
+        getForm.reset(); // Reset the form after successful submission
+      })
+      .catch((error) => {
+        alert("Error sending message: " + error.message);
+      });
+  });
+}
+
+// Function to Fetch and Display Latest 3 Blogs
+function displayBlogs() {
+  const leftColumn = document.querySelector('.left-column');
+  if (!leftColumn) return;
+
+  const blogsQuery = query(
+    ref(database, 'blogs'),
+    orderByChild('timestamp'),
+    limitToLast(3)
+  );
+
+  onValue(blogsQuery, (snapshot) => {
+    leftColumn.innerHTML = '<h2 class="latest-blogs-title">Latest Blogs</h2>';
+
+    const blogs = [];
+    snapshot.forEach((child) => {
+      blogs.unshift({ id: child.key, ...child.val() });
+    });
+
+    blogs.forEach((blog) => {
+      const blogHTML = `
+       <div class="blog-item" onclick="redirectToBlog('${blog.id}')">
+          <img src="${blog.imageUrl}" alt="${blog.title}" class="blog-image">
+          <div class="blog-content">
+            <p class="blog-date">Date - ${new Date(blog.timestamp).toLocaleDateString()}</p>
+            <h3 class="blog-title">${blog.title}</h3>
+            <p class="blog-description">${blog.description || blog.content || 'No content available.'}</p>
+          </div>
+        </div>
+      `;
+      leftColumn.insertAdjacentHTML('beforeend', blogHTML);
+    });
+
+    window.redirectToBlog = function(blogId) {
+  window.location.href = `home_blog.html?id=${blogId}`;
+};
+  });
+}
+
+// Execute Both Functions When Page Loads
+document.addEventListener('DOMContentLoaded', () => {
+  setupContactForm();  // Initialize "Get in Touch" form functionality
+  displayBlogs();      // Fetch and display blog posts
+});
+
+</script>
+  </head> 
+  <body>
+    <header>
+      <nav class="navbar">
+          <div class="logo">
+              <img src="images/WhatsApp_Image_2024-12-10_at_7.19.12_PM-removebg-preview 1 (1).png" alt="Logo">
+          </div>
+          <input type="checkbox" id="menu-checkbox" class="menu-checkbox">
+          <label for="menu-checkbox" class="menu-icon">
+              <span class="bar"></span>
+              <span class="bar"></span>
+              <span class="bar"></span>
+          </label>
+          <ul class="nav-links">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="aboutus.html">ABOUT US</a></li>
+            <li><a href="practice.html">PRACTICE</a></li>
+            <li><a href="attorneys.html">ATTORNEYS</a></li>
+            <li><a href="blog.html">BLOG</a></li>
+            <li><a href="contact.html">CONTACT</a></li>
+          </ul>       
+      </nav>
+      
+      <div class="background">
+        <img src="/images/homes.jpg" alt="Background">
+      </div>
+      <section class="hero">
+        <div class="hero-content">
+          <h1>Legal Pro Services</h1>
+          <p>We know how large objects will act, but things on a small scale.</p>
+          <div class="buttons">
+            <a href="aboutus.html#about" class="btn primary">Learn More</a>
+          </div>
+        </div>          
+      </section>
+    </header>
+
+      <!--about us-->
+    <section class="about-section">
+      <div class="image-gallery">
+          <div class="left-columns">
+              <img src="images/vertical.png" alt="Team Image 1" class="team1-image">
+              <img src="images/horizon.png" alt="Horizontal Image" class="horizontal-image">
+          </div>
+          <div class="right-columns">
+              <img src="images/Screenshot 2025-01-20 150433.png" alt="Success Rate" class="stat-image">
+              <img src="images/vertical.png" alt="Team Image 2" class="team2-image">
+          </div>
+      </div>
+
+      <div class="about-content">
+          <p class="abit-text">A B I T</p>
+          <h2 class="about-title">ABOUT US</h2>
+          <p class="description">
+              Asal Legal Solution LLP is a premier New Delhi-based law firm rooted in the principles of 
+              excellence, integrity, and client satisfaction. Located in Connaught Place, the heart of India's 
+              legal hub, we are committed to delivering impactful solutions that transcend traditional legal 
+              boundaries.
+          </p>
+          <a href="aboutus.html#about" class="explore-btn">EXPLORE MORE</a>
+          
+      </div>
+  </section>
+  
+    <!--Practice section-->
+    <section id="#practice">
+      <div class="practice-area-container">
+          <h2 class="section-title">OUR PRACTICE AREA</h2>
+          <div class="card-container">
+            <div class="cards">
+              <h3 class="cards-title">Constitutional Law</h3>
+              <img src="images/Vector (14).png" alt="Civil Law Icon" class="card-icon"> 
+              <p class="cards-description">Defending fundamental rights and challenging laws in conflict with constitutional mandates.</p>
+                <a href= "practice.html" class="cards-button">Learn More</a>
+              
+            </div>
+            <div class="cards">
+              <h3 class="cards-title">Corporate Law</h3>
+              <img src="images/Vector (11).png" alt="Education Law Icon" class="card-icon">
+              <p class="cards-description">Advising on corporate governance, mergers, acquisitions, and compliance matters.
+              </p>
+              <a href= "practice.html" class="cards-button">Learn More</a>
+            </div>
+            <div class="cards">
+              <h3 class="cards-title">Land Acquisition</h3>
+              <img src="images/Group 49.png" alt="Business Law Icon" class="card-icon">
+              <p class="cards-description">Assisting in disputes and legal processes related to property ownership, transfers, and compensation claims.
+              </p>
+               <a href= "practice.html" class="cards-button">Learn More</a>
+            </div>
+            <div class="cards">
+              <h3 class="cards-title">Criminal Law</h3>
+              <img src="images/Vector (13).png" alt="Criminal Law Icon" class="card-icon">
+              <p class="cards-description">Representing clients in appeals and critical cases, including under  Prevention of Money Laundering Act.
+              </p>
+              <button class="cards-button">Learn More</button>
+            </div>
+            <div class="cards">
+              <h3 class="cards-title">Human Rights</h3>
+              <img src="images/Group 53 (1).png" alt="Family Law Icon" class="card-icon">
+              <p class="cards-description">Advocacy for justice, equality, and socio-economic rights. Ensuring fair treatment and equal opportunities.</p>
+               <a href= "practice.html" class="cards-button">Learn More</a>
+            </div>
+            <div class="cards">
+              <h3 class="cards-title">White-collar Crimes</h3>
+              <img src="images/Vector (12).png" alt="Cyber Law Icon" class="card-icon">
+              <p class="cards-description"> Specialized representation in PMLA cases, handling attachment orders, compliance, and investigations.
+              </p>
+               <a href= "practice.html" class="cards-button">Learn More</a>
+            </div>
+          </div>
+        </div>
+        </div>    
+      </section>
+
+      <!--blog section-->
+      <section class="blog-section" id="blogId">
+        <h1 class="section-title">Latest Blog</h1>
+        <p class="section-subtitle">
+          Worem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate
+          libero et velit interdum, ac aliquet odio mattis.
+        </p>
+        <div class="container">
+          <div class="blogs-container">
+            <div class="blog-grid">
+              <!-- Left Column -->
+              <div class="left-column">
+                <h2 class="latest-blogs-title">Latest Blogs</h2>
+                <div class="blog-item" data-url="horse.html">
+                  <img
+                    src="images/race-hose 1 (2).png"
+                    alt=""
+                    class="blog-image"
+                  />
+                  <div class="blog-content">
+                    <p class="blog-date">Date - 03 June 2023</p>
+                    <h3 class="blog-title">
+                      6-Year-Old Horse Dies at Belmont Park After Race Injury
+                    </h3>
+                    <p class="blog-description">
+                      NEW YORK—A 6-year-old horse died after being injured in a race
+                      at Belmont Park ahead of next week's races.
+                    </p>
+                  </div>
+                </div>
+                </div>
+              <!-- Right Column -->
+              <div class="right-column">
+                <div class="education-law">
+                  <div class="overlay">
+                    <a href="law.html"><button class="education-law-btn">Education Law</button>
+                </a>
+                   <p class="author-info">Robert John</p>
+                    <p class="blog-dates">Posted On - 03 June 2023</p>
+                    <h3 class="blog-titles">
+                      DISCOVER THE MEMBER<br> BENEFITS OF USA CYCLING
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+     
+    <!--Get In Touch section-->
+    <section class="contact-section">
+      <div class="background-eclipse"></div>  
+      <h2 class="contact-heading">GET IN TOUCH</h2>
+      <div class="contact-container">
+        <div class="contact-info">
+          <ul>
+            <li>
+              <img src="images/akar-icons_location.png" alt="Location Icon" />
+              <div class="info">
+                <h4>Our Office</h4>
+                <p>LGF-6, Amba Deep Building,<br>
+                  14, Kasturba Gandhi Marg,<br>
+                  Connaught Place,<br>
+                  New Delhi - 110 001.<br>
+                  
+                </p>
+              </div>
+            </li>
+            <li>
+              <img src="images/ci_phone.png" alt="Phone Icon" />
+              <div class="info">
+                <h4>Let's Talk</h4>
+                <p><a href="tel:+911145261483">+911145261483</a></p>
+                <p><a href="tel:+919599223122">+919599223122</a></p>
+              </div>
+            </li>
+            <li>
+              <img src="images/Vector (8).png" alt="Email Icon" />
+              <div class="info">
+                <h4>General Enquiries</h4>
+                <p>
+                  <a href="office@akashkakade.org">office@akashkakade.org</a>
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="contact-form">
+          <form id="getForm">
+            <input id="fullName"  type="text" placeholder="Enter Your Name*" required />
+            <input id="email" type="email" placeholder="Enter Your E-mail*" required />
+            <textarea id="message"   placeholder="Type Your Message*" required></textarea>
+            <button type="submit">Send Message</button>
+          </form>
+      </div>
+    </section>
+    
+    <!-- Footer Section -->
+    <div class="footer">
+      <div class="footer-container">
+        <div class="footer-section">
+          <h3>NAVIGATION</h3>
+          <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="aboutus.html">About us</a></li>
+          <li><a href="practice.html">Practice</a></li>
+          <li><a href="attorneys.html">Attorneys</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>WHAT WE DO</h3>
+          <ul>
+            <li><a href="#">Encouraging Testing</a></li>
+            <li><a href="#">Strengthening Advocacy</a></li>
+            <li><a href="#">Sharing Information</a></li>
+            <li><a href="#">Building Leadership</a></li>
+            <li><a href="#">Engaging With Global Fund</a></li>
+            <li><a href="#">Shining a Light</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>LEGAL</h3>
+          <ul>
+            <li><a href="aboutus.html">General Info</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="services.html">Terms of Service</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>TALK TO US</h3>
+          <ul>
+            <li>
+              <img src="images/akar-icons_location.png" alt="Location Icon" />
+              <div class="info">
+                <h4>Our Office</h4>
+                <p>LGF-6, Amba Deep Building,<br>
+                  14, Kasturba Gandhi Marg,<br>
+                  Connaught Place,<br>
+                  New Delhi - 110 001.<br>
+                  
+                </p>
+              </div>
+            </li>
+            <li>
+              <img src="images/ci_phone.png" alt="Phone Icon" />
+              <div class="info">
+                <h4>Let's Talk</h4>
+                <p><a href="tel:+911145261483">+911145261483</a></p>
+                <p><a href="tel:+919599223122">+919599223122</a></p>
+              </div>
+            </li>
+            <li>
+              <img src="images/Vector (8).png" alt="Email Icon" />
+              <div class="info">
+                <h4>General Enquiries</h4>
+                <p>
+                  <a href="office@akashkakade.org"
+                    >office@akashkakade.org</a
+                  >
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-logo">
+          <img
+            src="images/WhatsApp Image 2024-12-10 at 7.19.12 PM 1 (1).png"
+            alt="ASAL Solutions Logo"
+          />
+        </div>
+        <p>
+          ©2024 Design and Developed with love by
+          <a href="https://tars.co.in/">TARS TECHNOLOGIES</a>
+        </p>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.linkedin.com/company/asal-legal-solution-llp/"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+        </div>   
+      </div>
+    </div>
+
+    
+  <script>
+    // Add JavaScript functionality for clickable blog items
+    document.addEventListener("DOMContentLoaded", () => {
+      const blogItems = document.querySelectorAll(".blog-item");
+
+      blogItems.forEach((item) => {
+        item.addEventListener("click", () => {
+          const url = item.getAttribute("data-url");
+          if (url) {
+            window.location.href = url;
+          }
+        });
+      });
+    });
+  </script>
+  
+</body>
+</html>

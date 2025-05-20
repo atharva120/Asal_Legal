@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Page</title>
+    <link rel="icon" type="image/png" href="images/logo.png" />
+    <link rel="stylesheet" href="styles/practice.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    
+</head>
+<body>
+      <header>
+          <nav class="navbar">
+              <div class="logo">
+                  <img src="images/WhatsApp_Image_2024-12-10_at_7.19.12_PM-removebg-preview 1 (1).png" alt="Logo">
+              </div>
+              <input type="checkbox" id="menu-checkbox" class="menu-checkbox">
+              <label for="menu-checkbox" class="menu-icon">
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+              </label>
+              <ul class="nav-links">
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="aboutus.html">ABOUT US</a></li>
+                <li><a href="practice.html">PRACTICE</a></li>
+                <li><a href="attorneys.html">ATTORNEYS</a></li>
+                <li><a href="blog.html">BLOG</a></li>
+                <li><a href="contact.html">CONTACT</a></li>
+              </ul>       
+          </nav>
+          <div class="background">
+              <img src="images/top-view-career-guidance-items-judges_23-2149443481.avif" alt="Background">
+          </div>
+          <div class="overlay">
+              <h1>Practice</h1>
+              <b><p>Home > <span>Practice</span></p></b>
+          </div>  
+      </header>
+  
+                    
+   <!-- Practice Section -->
+<section id="practice">
+  <div class="practice-area-container">
+    <h2 class="section-title">OUR PRACTICE AREA</h2>
+    <p class="section-description">
+      The pricing below is shown on a per month basis. For organisations that <br> require bulk eSignature services once or twice a year and would like to <br> discuss annual pricing or a prepaid option, please get in touch by<br> scheduling a call with our team.
+    </p>
+    <div class="card-container">
+      <div class="cards" onclick="openModal('constitutionalLaw')">
+        <h3 class="cards-title">Constitutional Law</h3>
+        <img src="images/Vector (14).png" alt="Civil Law Icon" class="card-icon">
+        <p class="cards-description">Defending fundamental rights and challenging laws in conflict with constitutional mandates.</p>
+        <button class="cards-button">Learn More</button>
+      </div>
+      <div class="cards" onclick="openModal('corporateLaw')">
+        <h3 class="cards-title">Corporate Law</h3>
+        <img src="images/Vector (11).png" alt="Education Law Icon" class="card-icon">
+        <p class="cards-description">Advising on corporate governance, mergers, acquisitions, and compliance matters.</p>
+        <button class="cards-button">Learn More</button>
+      </div>
+      <div class="cards" onclick="openModal('landAcquisition')">
+        <h3 class="cards-title">Land Acquisition</h3>
+        <img src="images/Group 49.png" alt="Business Law Icon" class="card-icon">
+        <p class="cards-description">Assisting in disputes and processes related to property and compensation.</p>
+        <button class="cards-button">Learn More</button>
+      </div>
+      <div class="cards" onclick="openModal('criminalLaw')">
+        <h3 class="cards-title">Criminal Law</h3>
+        <img src="images/Vector (13).png" alt="Criminal Law Icon" class="card-icon">
+        <p class="cards-description">Representing clients in appeals and critical cases, including under PMLA.</p>
+        <button class="cards-button">Learn More</button>
+      </div>
+      <div class="cards" onclick="openModal('humanRights')">
+        <h3 class="cards-title">Human Rights</h3>
+        <img src="images/Group 53 (1).png" alt="Family Law Icon" class="card-icon">
+        <p class="cards-description">Advocacy for justice, equality, and socio-economic rights. Ensuring fair treatment and equal opportunities.</p>
+        <button class="cards-button">Learn More</button>
+      </div>
+      <div class="cards" onclick="openModal('whiteCollarCrimes')">
+        <h3 class="cards-title">White-collar Crimes</h3>
+        <img src="images/Vector (12).png" alt="Cyber Law Icon" class="card-icon">
+        <p class="cards-description">Specialized representation in PMLA cases, handling attachment orders, compliance, and investigations.</p>
+        <button class="cards-button">Learn More</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal (for card details) -->
+<div id="modal" class="modal" onclick="closeModal()">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <span class="close-btn" onclick="closeModal()">×</span>
+    
+    <h3 class="modal-title" id="modalTitle"></h3>
+    <p class="modal-description" id="modalDescription"></p>
+  </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+  function openModal(card) {
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDescription = document.getElementById('modalDescription');
+
+    // Set content based on the card clicked
+    if (card === 'constitutionalLaw') {
+  modalTitle.innerHTML = '  Constitutional Law  <img src="images/Vector (14).png" alt="Constitutional Law Icon" class="modal-icon">';
+  modalDescription.innerText = 'Constitutional Law focuses on interpreting and applying a country\'s constitution. It protects individuals\' fundamental rights and ensures that laws align with constitutional principles. This area of law challenges government actions that violate rights such as personal freedoms and equality. It also regulates the distribution of governmental powers, maintaining a balance among branches of government and safeguarding citizens from unconstitutional actions.';
+}else if (card === 'corporateLaw') {
+  modalTitle.innerHTML = 'Corporate Law <img src="images/Vector (11).png" alt="Education Law Icon" class="modal-icon">';
+      modalDescription.innerText = 'Corporate Law involves advising businesses on legal aspects related to their operations, including corporate governance, mergers, and acquisitions. It ensures companies comply with regulations, manage risks, and protect stakeholders interests. This area of law also covers corporate structure, intellectual property rights, and dispute resolution, guiding businesses through complex legal challenges.';
+    } else if (card === 'landAcquisition') {
+      modalTitle.innerHTML = ' Land Acquisition <img src="images/Group 49.png" alt="Education Law Icon" class="modal-icon">';
+      modalDescription.innerText = 'Land Acquisition deals with the legal processes involved in acquiring land for public or private development projects. It includes resolving disputes related to compensation, land ownership, and the rights of landowners. This area of law ensures fair compensation for affected individuals and addresses legal challenges related to land use, zoning, and governmental authority.';
+    } else if (card === 'criminalLaw') {
+      modalTitle.innerHTML = 'Criminal Law <img src="images/Vector (13).png" alt="Education Law Icon" class="modal-icon">';
+      modalDescription.innerText = 'Criminal Law involves defending clients accused of crimes, ranging from theft to violent offenses. It includes representing clients in appeals and critical cases, ensuring fair trials. Under laws like the PMLA, it also addresses financial crimes, holding individuals accountable for illegal financial activities.';
+    } else if (card === 'humanRights') {
+      modalTitle.innerHTML = 'Human Rights <img src="images/Group 53 (1).png" alt="Education Law Icon" class="modal-icon">';
+      modalDescription.innerText = 'Human Rights Law protects individuals fundamental rights, including equality, dignity, and freedom from discrimination. It advocates for justice and ensures equal access to rights for all, regardless of background, race, or gender. This area of law addresses violations and promotes socio-economic fairness and equal opportunities.';
+    } else if (card === 'whiteCollarCrimes') {
+      modalTitle.innerHTML = 'White-collar Crimes <img src="images/Vector (12).png" alt="Education Law Icon" class="modal-icon">';
+      modalDescription.innerText = 'White-collar Crimes involve non-violent crimes typically committed by individuals in professional or business settings, such as fraud, money laundering, and insider trading. This area of law provides specialized representation in cases under the Prevention of Money Laundering Act (PMLA), handling issues like attachment orders, compliance, and investigations.';
+    }
+
+    modal.style.display = 'block'; // Show modal
+    document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+  }
+
+  function closeModal() {
+    const modal = document.getElementById('modal');
+    modal.style.display = 'none'; // Hide modal
+    document.body.style.overflow = 'auto'; // Allow scrolling when modal is closed
+  }
+</script>
+
+      <div class="container">
+        <div class="info-boxes">
+            <div class="info-box">
+                <img src="images/Vector (10).png" alt="Gavel">
+                <p>We combine expertise and strategy to deliver the finest legal services.</p>
+            </div>
+            <div class="info-box">
+                <img src="images/Vector (9).png" alt="Scale">
+                <p>Your legal matters are handled with precision, efficiency, and utmost trust.</p>
+            </div>
+            <div class="info-box">
+                <img src="images/Group.png" alt="Smile">
+                <p>We are committed to achieving the best possible outcomes for you.</p>
+            </div>
+        </div>
+        <h1 class="why-choose-us">WHY CHOOSE US</h1>
+        <div class="content">
+            <div class="images">
+                <img src="images/blog2.jpg" alt="Image 1">
+                <img src="images/blog4.jpg" alt="Image 2">
+                <img src="images/blog1.jpg" alt="Image 3">
+                <img src="images/blog3.jpg" alt="Image 4">
+            </div>
+            <div class="text">
+                <p><br><b>Certified Expertise:</b> Four seasoned Advocates on Record ensure a seamless understanding of Supreme Court procedures.<br>
+                  <br><b>Extensive Experience:</b> Proven success in landmark judgments and high-stakes litigation, successfully represented clients in landmark cases across constitutional, corporate, and criminal domains.<br>
+                  <br><b>Judicial Acumen:</b> Mastery in constitutional jurisprudence and evolving legal doctrines.<br>
+                  <br><b>Representation:</b> Solutions tailored to the intricacies of each case.<br>
+                  <br><b>Collaborative Approach:</b> Effective partnerships with Senior Advocates and domain experts for maximized client outcomes.<br>
+                  <br><b>Depth in PMLA Matters:</b> Expertise in combating allegations of money laundering, securing favorable outcomes in critical financial cases.<br>
+                  </p>
+            </div>
+        </div>
+    </div>
+  </section>
+    <!-- Footer Section -->
+    <div class="footer">
+      <div class="footer-container">
+        <div class="footer-section">
+          <h3>NAVIGATION</h3>
+          <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="aboutus.html">About us</a></li>
+          <li><a href="practice.html">Practice</a></li>
+          <li><a href="attorneys.html">Attorneys</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>WHAT WE DO</h3>
+          <ul>
+            <li><a href="#">Encouraging Testing</a></li>
+            <li><a href="#">Strengthening Advocacy</a></li>
+            <li><a href="#">Sharing Information</a></li>
+            <li><a href="#">Building Leadership</a></li>
+            <li><a href="#">Engaging With Global Fund</a></li>
+            <li><a href="#">Shining a Light</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>LEGAL</h3>
+          <ul>
+            <li><a href="aboutus.html">General Info</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="services.html">Terms of Service</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>TALK TO US</h3>
+          <ul>
+            <li>
+              <img src="images/akar-icons_location.png" alt="Location Icon" />
+              <div class="info">
+                <h4>Our Office</h4>
+                <p>LGF-6, Amba Deep Building,<br>
+                  14, Kasturba Gandhi Marg,<br>
+                  Connaught Place,<br>
+                  New Delhi - 110 001.<br>
+                  
+                </p>
+              </div>
+            </li>
+            <li>
+              <img src="images/ci_phone.png" alt="Phone Icon" />
+              <div class="info">
+                <h4>Let’s Talk</h4>
+                <p><a href="tel:+911145261483">+911145261483</a></p>
+                <p><a href="tel:+919599223122">+919599223122</a></p>
+              </div>
+            </li>
+            <li>
+              <img src="images/Vector (8).png" alt="Email Icon" />
+              <div class="info">
+                <h4>General Enquiries</h4>
+                <p>
+                  <a href="office@akashkakade.org"
+                    >office@akashkakade.org</a
+                  >
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+
+      <div class="footer-bottom">
+        <div class="footer-logo">
+          <img
+            src="images/WhatsApp Image 2024-12-10 at 7.19.12 PM 1 (1).png"
+            alt="ASAL Solutions Logo"
+          />
+        </div>
+        <p>
+          ©2024 Design and Developed with love by
+          <a href="https://tars.co.in/">TARS TECHNOLOGIES</a>
+        </p>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.linkedin.com/company/asal-legal-solution-llp/"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+        </div>   
+      </div>
+    </div>
+</body>
+</html>

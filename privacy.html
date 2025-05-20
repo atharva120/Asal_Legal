@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="icon" type="image/png" href="images/logo.png" />
+  <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    line-height: 1.5;
+    color: #333;
+    height: 100%;
+    /* font-family: Arial, sans-serif; */
+  }
+  
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  /* Header Section */
+  header {
+    width: 100%;
+    position: relative;
+    min-height: 100vh;
+  }
+  
+  header .background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+  
+  header h1 {
+    font-size: 3.5rem;
+    font-weight: 600;
+  }
+  
+  header p {
+    padding-top: 20px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+  
+  header p span {
+    color: #f9b233;
+  }
+  
+  /* Navigation Bar */
+  nav {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+  }
+  
+  nav .logo img {
+    width: auto;
+    height: 100px;
+    position: relative;
+    margin-left: 80%;
+  }
+  
+  nav .menu-checkbox {
+    padding: 10px;
+    display: none;
+  }
+  
+  nav .menu-icon {
+    display: none;
+    cursor: pointer;
+  }
+  
+  nav .menu-icon .bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px auto;
+    background: #333;
+  }
+  
+  nav .nav-links {
+    margin-right: 15%;
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+  }
+  
+  nav .nav-links li a {
+    color: #333;
+    font-size: 1rem;
+    font-weight: 540;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease;
+  }
+  
+  nav .nav-links li a:hover {
+    color: #f9b233;
+  }
+
+  /* Improved Hero Section */
+  .hero {
+    padding: 140px 50px 50px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    min-height: calc(100vh - 100px);
+  }
+  
+  .hero-content {
+    max-width: 1200px;
+    padding: 20px;
+    color: black;
+    /* background-color: rgba(255, 255, 255, 0.9); */
+    border-radius: 5px;
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+  }
+  
+  .hero-content h1 {
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+  
+  .hero-content p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: black;
+  }
+  
+  .hero-content strong {
+    font-weight: 700;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 991px) {
+    nav .nav-links {
+      margin-right: 15%;
+      top: 100%;
+      width: 72%;
+    }
+    
+    .hero {
+      padding: 120px 30px 30px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    nav .menu-icon {
+      display: block;
+      margin-right: 10px;
+    }
+  
+    nav .nav-links {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      flex-direction: column;
+      background: #fffffff0;
+      width: 100%;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+      margin-top: 80px;
+    }
+  
+    nav .nav-links li {
+      text-align: center;
+      padding: 0.5rem 0;
+    }
+  
+    nav .menu-checkbox:checked ~ .nav-links {
+      display: flex;
+    }
+    
+    nav .logo img {
+      height: 70px;
+      margin-left: 20px;
+    }
+    
+    .hero {
+      padding: 100px 20px 20px;
+    }
+    
+    .hero-content {
+      padding: 15px;
+    }
+    
+    .hero-content p {
+      font-size: 1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    nav .logo img {
+      height: 50px;
+      margin-left: 10px;
+    }
+  
+    nav .nav-links {
+      margin-top: 60px;
+    }
+    
+    .hero {
+      padding: 80px 15px 15px;
+    }
+    
+    .hero-content {
+      padding: 10px;
+    }
+    
+    .hero-content p {
+      font-size: 0.95rem;
+    }
+    
+    nav .nav-links li a {
+      font-size: 0.8rem;
+    }
+  }
+ 
+  /*FOOTER SECTION*/
+  .footer {
+    position: relative;
+    background-color: #2A5883;
+    color: white;
+    padding: 20px 20px;
+    overflow: hidden;
+  }
+  
+  .footer::before {
+    content: '';
+    position: absolute;
+    top: -110px;
+    left: 0;
+    width: 100%;
+    height: 220px;
+    background-color: rgba(43, 110, 152, 1);
+    border-radius: 40%;
+  }
+  
+  .footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    align-items: flex-start;
+  }
+  
+  .footer-section {
+    margin: 90px 10px;
+    text-align: left;
+  }
+  
+  .footer-section h3 {
+    font-size: 18px;
+    margin-top: 50px;
+    margin-bottom: 10px;
+  }
+  
+  .footer-section ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-section ul li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+  
+  .footer-section ul li img {
+    width: 30px;
+    height: auto;
+    margin-right: 15px;
+    margin-top: 4%;
+  }
+  
+  .footer-section ul li h4 {
+    font-size: 1.2rem;
+    font-weight: 540;
+  }
+  
+  .footer-section ul li a {
+    padding-top: 10px;
+    line-height: 1.5;
+    text-decoration: none;
+  }
+  
+  .footer-section ul li a:hover {
+    text-decoration: underline;
+  }
+  
+  .footer-section p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  .footer-section p i {
+    margin-right: 10px;
+  }
+  
+  .footer-bottom {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    border-top: 2px solid white;
+    padding-top: 10px;
+    text-align: center;
+    flex-wrap: wrap;
+  }
+  
+  .footer-logo img {
+    width: 80px;
+    height: 110px;
+    padding-left: 20px 10px;
+  }
+  
+  .footer-bottom p {
+    font-size: 14px;
+  }
+  
+  .footer-bottom p a {
+    text-decoration: underline;
+    transition: color 0.3s ease;
+  }
+  
+  .footer-bottom a:hover {
+    color: white;
+  }
+  
+  .social-icons {
+    display: flex;
+    margin-top: 10px;
+    gap: 20px;
+  }
+  
+  .social-icons a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid white;
+    border-radius: 50%;
+    text-decoration: none;
+    color: #ffffff;
+    transition: all 0.3s ease;
+  }
+  
+  .social-icons a:hover {
+    background-color: #f1f1f1;
+    border-color: #007bff;
+    color: #007bff;
+  }
+  
+  .social-icons a i {
+    font-size: 15px;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .footer-container {
+      flex-direction: column;
+      align-items: center;
+      text-align: center; 
+      padding: 10px;
+    }
+  
+    .footer-section {
+      flex: 1 1 100%;
+      margin: 15px 0;
+      padding: 5px;
+      text-align: center; 
+    }
+  
+    .footer-section h3 {
+      font-size: 16px;
+      margin-bottom: 5px;
+      margin-top: 10px;
+    }
+  
+    .footer-section ul {
+      padding: 0;
+    }
+  
+    .footer-section ul li {
+      justify-content: center; 
+    }
+  
+    .footer-section ul li h4 {
+      font-size: 0.95rem;
+      margin-bottom: 5px;
+    }
+  
+    .footer-section ul li img {
+      width: 25px;
+      margin-right: 0; 
+    }
+  
+    .footer-section ul li a {
+      line-height: 1.4;
+    }
+  
+    .footer-section p {
+      font-size: 12px;
+      line-height: 1.4;
+      margin-top: 5px;
+    }
+  
+    .footer-bottom {
+      flex-direction: column;
+      text-align: center;
+      padding-top: 5px;
+    }
+  
+    .footer-logo img {
+      width: auto;
+      height: 90px;
+      margin: 10px auto;
+    }
+  
+    .social-icons {
+      gap: 8px;
+      margin-top: 8px;
+    }
+  
+    .social-icons a {
+      width: 35px;
+      height: 35px;
+    }
+  
+    .social-icons a i {
+      font-size: 13px;
+    }
+    .footer::before {
+      width: 100%;
+      height: 192px;
+      top: -130px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .footer-container {
+      flex-direction: column;
+      align-items: center;
+      text-align: center; 
+      padding: 8px;
+    }
+  
+    .footer-section {
+      margin: 18px 0;
+      padding: 5px;
+      text-align: center; 
+    }
+  
+    .footer-section h3 {
+      font-size: 14px;
+      margin-bottom: 5px;
+      margin-top: 5px;
+    }
+  
+    .footer-section ul {
+      padding: 0;
+    }
+  
+    .footer-section ul li {
+      justify-content: center;
+    }
+  
+    .footer-section ul li h4 {
+      font-size: 0.85rem;
+      margin-bottom: 5px;
+    }
+  
+    .footer-section ul li img {
+      width: 20px;
+      margin-right: 0; 
+    }
+  
+    .footer-section ul li a {
+      line-height: 1.3;
+    }
+  
+    .footer-section p {
+      font-size: 11px;
+      line-height: 1.3;
+      margin-top: 5px;
+    }
+  
+    .footer::before {
+      width: 110%;
+      height: 188px;
+      top: -134px;
+      left: -5%;
+    }
+  }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="images/WhatsApp_Image_2024-12-10_at_7.19.12_PM-removebg-preview 1 (1).png" alt="Logo">
+        </div>
+        <input type="checkbox" id="menu-checkbox" class="menu-checkbox">
+        <label for="menu-checkbox" class="menu-icon">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </label>
+        <ul class="nav-links">
+          <li><a href="index.html">HOME</a></li>
+          <li><a href="aboutus.html">ABOUT US</a></li>
+          <li><a href="practice.html">PRACTICE</a></li>
+          <li><a href="attorneys.html">ATTORNEYS</a></li>
+          <li><a href="blog.html">BLOG</a></li>
+          <li><a href="contact.html">CONTACT</a></li>
+        </ul>       
+    </nav>
+    <section class="hero">
+      <div class="hero-content">
+        <p><strong>Privacy Policy for Akash Kakade</strong><br>
+        <strong>Effective Date: [30/11/2024]</strong><br><br>
+        Akash Kakade values your privacy and is committed to protecting your personal data. This Privacy Policy outlines the types of personal information we collect from users of this website and how we use, protect, and share that information. By using this website, you consent to the practices described in this policy.<br><br>
+    
+        <strong>1. Information We Collect</strong><br>
+        We collect two types of information from users: Personal Information and Non-Personal Information.<br><br>
+    
+        <strong>Personal Information:</strong><br>
+        This includes any information that identifies you as an individual or can be used to contact you. We collect personal information when you interact with the website or contact us directly. This may include:<br><br>
+        - Contact Information: Name, email address, phone number, and any details you provide while communicating with us.<br>
+        - Communication Data: Any correspondence, inquiries, or feedback shared through contact forms or email.<br><br>
+    
+        <strong>Non-Personal Information:</strong><br>
+        This includes data that does not identify you personally but helps us understand website usage:<br><br>
+        - Usage Data: Information about how you interact with the website, such as pages visited and time spent.<br>
+        - Technical Data: Browser type, IP address, device type, and operating system.<br>
+        - Cookies and Tracking Technologies: We use cookies to improve the website experience. You can manage cookie preferences through your browser settings.<br><br>
+    
+        <strong>2. How We Use Your Information</strong><br>
+        We use your personal and non-personal information for the following purposes:<br><br>
+        - Communication: To respond to inquiries and provide information.<br>
+        - Website Enhancement: To analyze user behavior and improve the website.<br>
+        - Legal Compliance: To comply with applicable legal requirements.<br>
+        - Cookies & Analytics: To track website performance and user engagement.<br><br>
+    
+        <strong>3. Data Sharing and Disclosure</strong><br>
+        We do not sell or rent personal information to third parties. However, we may share your data in the following cases:<br><br>
+        - Third-Party Service Providers: We may share data with website hosting, analytics, and security service providers.<br>
+        - Legal Requirements: If required by law, we may disclose personal information to comply with legal obligations or protect our rights.<br><br>
+    
+        <strong>4. Data Security</strong><br>
+        We implement industry-standard security measures to protect personal information. However, no data transmission or storage method is 100% secure, and we cannot guarantee absolute security.<br><br>
+    
+        <strong>5. Your Data Rights and Choices</strong><br>
+        As a user, you have the following rights:<br><br>
+        - Access & Correction: You can request access to and correction of your personal information.<br>
+        - Data Deletion: You may request deletion of your personal data, subject to legal retention requirements.<br>
+        - Cookies: You can manage or disable cookies through your browser settings.<br><br>
+    
+        <strong>6. Retention of Data</strong><br>
+        We retain personal data only as long as necessary for the purposes outlined in this Privacy Policy, unless a longer retention period is required by law.<br><br>
+    
+        <strong>7. Disclaimer</strong><br>
+        This website is designed for the dissemination of basic information about Akash Kakade. The content herein is for informational purposes only and should not be construed as legal advice. Users are advised to verify information from independent sources before acting upon it.<br><br>
+    
+        <strong>8. Changes to This Privacy Policy</strong><br>
+        We may update this Privacy Policy periodically. Any changes will be posted on this page. Please review this policy regularly to stay informed.<br><br>
+    
+        <strong>9. Contact Us</strong><br>
+        If you have any questions about this Privacy Policy, please contact us at:<br><br>
+        - <strong>Email:</strong> info@akashkakade.com<br>
+        - <strong>Phone:</strong> +91 9112117415<br>
+        - <strong>Address:</strong>LGF-6, Amba Deep Building,14, Kasturba Gandhi Marg, Connaught Place,New Delhi - 110 001.<br><br>
+    
+        This website uses cookies to improve its usability. By continuing to use our website without changing your privacy settings, you agree to use our cookies.</p>
+      </div>
+    </section>
+  </header>
+
+  <!-- Footer Section -->
+  <div class="footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3>NAVIGATION</h3>
+        <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="aboutus.html">About us</a></li>
+        <li><a href="practice.html">Practice</a></li>
+        <li><a href="attorneys.html">Attorneys</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>WHAT WE DO</h3>
+        <ul>
+          <li><a href="#">Encouraging Testing</a></li>
+          <li><a href="#">Strengthening Advocacy</a></li>
+          <li><a href="#">Sharing Information</a></li>
+          <li><a href="#">Building Leadership</a></li>
+          <li><a href="#">Engaging With Global Fund</a></li>
+          <li><a href="#">Shining a Light</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>LEGAL</h3>
+        <ul>
+          <li><a href="aboutus.html">General Info</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="services.html">Terms of Service</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>TALK TO US</h3>
+        <ul>
+          <li>
+            <img src="images/akar-icons_location.png" alt="Location Icon" />
+            <div class="info">
+              <h4>Our Office</h4>
+              <p>LGF-6, Amba Deep Building,<br>
+                14, Kasturba Gandhi Marg,<br>
+                Connaught Place,<br>
+                New Delhi - 110 001.<br>
+                
+              </p>
+            </div>
+          </li>
+          <li>
+            <img src="images/ci_phone.png" alt="Phone Icon" />
+            <div class="info">
+              <h4>Let's Talk</h4>
+              <p><a href="tel:+911145261483">+911145261483</a></p>
+              <p><a href="tel:+919599223122">+919599223122</a></p>
+            </div>
+          </li>
+          <li>
+            <img src="images/Vector (8).png" alt="Email Icon" />
+            <div class="info">
+              <h4>General Enquiries</h4>
+              <p>
+                <a href="office@akashkakade.org"
+                  >office@akashkakade.org</a
+                >
+              </p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-logo">
+        <img
+          src="images/WhatsApp Image 2024-12-10 at 7.19.12 PM 1 (1).png"
+          alt="ASAL Solutions Logo"
+        />
+      </div>
+      <p>
+        ©2024 Design and Developed with love by
+        <a href="https://tars.co.in/">TARS TECHNOLOGIES</a>
+      </p>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="https://www.linkedin.com/company/asal-legal-solution-llp/"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>   
+  </div>
+</body>
+</html>
